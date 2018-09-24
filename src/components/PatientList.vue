@@ -18,7 +18,7 @@ export default {
   components: {PatientRow},
   data() {
     return {
-      headers: ['First name', 'Last name', 'Conditions', 'Address', 'State', 'Postal code', 'Status']
+      headers: ['First name', 'Last name', 'Conditions', 'Address', 'City', 'State', 'Postal code', 'Status']
     }
   },
   props: {
@@ -40,7 +40,7 @@ export default {
 }
 .list-header {
   display: grid;
-  grid-template-columns: repeat(7, 1fr) min-content;
+  grid-template-columns: repeat(8, minmax(0,1fr)) min-content;
 };
 
 .column:first-child {

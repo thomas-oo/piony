@@ -15,11 +15,11 @@ export default {
 <style lang="scss"scoped>
 .header {
     display: grid;
-    grid-template-columns: 15% minmax(10%, 700px);
-    grid-template-rows: auto 40px;
+    grid-template-columns: 5% minmax(10%, 700px);
+    grid-template-rows: 1fr 2em;
     grid-template-areas:
         "logo title"
-        "logo search";
+        ". search";
     grid-column-gap: 1em;
 }
 .logo {
@@ -36,6 +36,6 @@ export default {
 .input {
     font-size: 1em;
     grid-area: search;
-    border-radius: 15px;
+    border-radius: 1em;
 }
 </style>

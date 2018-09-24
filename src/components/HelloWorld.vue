@@ -18,7 +18,7 @@
           </GmapInfoWindow>
         </GmapMarker>
       </GmapMap>
-      <i class="fas fa-plus-circle clickable"/>
+      <i class="fas fa-plus-circle clickable" v-tooltip="'Add patient'"/>
     </div>
   </div>
 </template>
@@ -56,9 +56,8 @@ export default {
     const patients = await apis.Tactio.getPatients();
     const promises = patients.map(async patient => {
       patient.forecast = await apis.Air.getForecast(patient.postalCode);
-      patient.address = `${patient.streerAdress}, ${patient.city}`; //spelling mistake in api
+      patient.address = patient.streerAdress; //spelling mistake in api
       delete patient.streerAdress;
-      delete patient.city;
       return patient;
     });
     this.$data.patients = await Promise.all(promises);
@@ -78,12 +77,13 @@ export default {
 .content {
   grid-area: content;
   display: grid;
-  grid-template-columns: auto min-content;
+  grid-template-columns: 1fr min-content;
   grid-template-areas:
     "list map";
 }
 .header {
   grid-area: header;
+  margin-bottom: 1em;
 }
 .map {
   grid-area: map;

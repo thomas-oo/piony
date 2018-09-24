@@ -6,6 +6,7 @@ import router from './router';
 import upperFirst from 'lodash/upperFirst'
 import camelCase from 'lodash/camelCase'
 import * as VueGoogleMaps from 'vue2-google-maps'
+import VTooltip from 'v-tooltip'
 
 const requireComponent = require.context(
   // The relative path of the components folder
@@ -46,6 +47,7 @@ Vue.use(VueGoogleMaps, {
     libraries: 'places,visualization',
   }
 });
+Vue.use(VTooltip);
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -5,6 +5,18 @@ const getPatients = function () {
     return fetch(url).then(resp => resp.json());
 }
 
+const editPatient = function (patient) {
+    const url = new URL(`${urlString}/patients/${patient.id}`);
+    return fetch(url, {method: 'PUT', body: JSON.stringify(patient)}).then(resp => resp.ok ? Promise.resolve() : Promise.reject());
+}
+
+const addPatient = function (patient) {
+    const url = new URL(`${urlString}/patients`);
+    return fetch(url, {method: 'POST', body: JSON.stringify(patient)}).then(resp => resp.json());
+}
+
 export default {
-    getPatients
+    getPatients,
+    editPatient,
+    addPatient
 }
