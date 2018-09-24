@@ -9,6 +9,13 @@ const getForecasts = _.debounce(function(bounds) {
     return fetch(url).then(resp => resp.json());
 }, 500, {leading: true});
 
+const getForecast = function(postalCode) {
+    const url = new URL(`${urlString}/forecast`);
+    url.searchParams.append('postalCode', postalCode);
+    return fetch(url).then(resp => resp.json());
+}
+
 export default {
-    getForecasts
+    getForecasts,
+    getForecast
 }
