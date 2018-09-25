@@ -4,7 +4,10 @@
       @input="e => edit('firstName', e)"/>
     <BaseEditableField :editing="editing" :value="patient.lastName"
       @input="e => edit('lastName', e)"/>
-    <BaseEditableField :editing="editing" :value="patient.conditions ? patient.conditions.name : undefined"/>
+    <BaseEditableField :editing="editing"
+      :value="patient.conditions ? patient.conditions.name : undefined"
+      :values="conditionValues"
+      @input="e => edit('conditions', e)"/>
     <BaseEditableField :editing="editing" :value="patient.address"
       @input="e => edit('address', e)"/>
     <BaseEditableField :editing="editing" :value="patient.city"
@@ -39,6 +42,9 @@ export default {
     },
     editing: {
       default: false,
+    },
+    conditions: {
+      type: Array,
     }
   },
   data() {
@@ -48,10 +54,21 @@ export default {
     }
   },
   computed: {
+    conditionValues() {
+      if (!this.conditions) {
+        return [];
+      }
+      return this.conditions.map(cond => cond.name);
+    }
   },
   methods: {
     edit(field, newValue) {
-      this.$data.newPatient[field] = newValue;
+      if (field === 'conditions') {
+        const condition = this.conditions.find(c => c.name === newValue);
+        this.$data.newPatient.conditions = condition;
+      } else {
+        this.$data.newPatient[field] = newValue;
+      }
     },
     cancel() {
       if (this.$data.editing) {

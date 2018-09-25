@@ -33,7 +33,7 @@ const greenMarker = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
 const yellowMarker = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
 const redMarker = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
 export default {
-  name: 'HelloWorld',
+  name: 'PIoNY',
   components: {PatientList},
   data: function(){
     return {

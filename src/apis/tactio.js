@@ -20,9 +20,15 @@ const deletePatient = function(patient) {
     return fetch(url, {method: 'DELETE'}).then(resp => resp.ok ? Promise.resolve() : Promise.reject());
 }
 
+const getConditions = function() {
+    const url = new URL(`${urlString}/conditions`);
+    return fetch(url).then(resp => resp.json());
+}
+
 export default {
     getPatients,
     editPatient,
     addPatient,
-    deletePatient
+    deletePatient,
+    getConditions
 }

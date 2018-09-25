@@ -2,7 +2,6 @@
     <div class="header">
         <img class="logo" src="../assets/logo.png" />
         <div class="title">PIoNY</div>
-        <input class="input" placeholder="Search here"/>
     </div>
 </template>
 
@@ -16,10 +15,8 @@ export default {
 .header {
     display: grid;
     grid-template-columns: 5% minmax(10%, 700px);
-    grid-template-rows: 1fr 2em;
     grid-template-areas:
-        "logo title"
-        ". search";
+        "logo title";
     grid-column-gap: 1em;
 }
 .logo {

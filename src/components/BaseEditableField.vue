@@ -5,7 +5,13 @@
   <div v-else>
     <input v-if="!values" type="text" :value="value"
       @input="e => $emit('input', e.target.value)"/>
-    <input v-else :value="value"/>
+    <select v-else :value="value" @input="e => $emit('input', e.target.value)">
+      <option v-for="(value, index) in values"
+        :key="index"
+        :value="value">
+        {{value}}
+      </option>
+    </select>
   </div>
 </template>
 
