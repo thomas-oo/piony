@@ -117,7 +117,8 @@ const webpackConfig = merge(baseWebpackConfig, {
       }
     ]),
     new webpack.ProvidePlugin({
-      _: 'lodash'
+      _: 'lodash',
+      Vue: 'vue'
     })
   ]
 })

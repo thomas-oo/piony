@@ -2,7 +2,10 @@
   <div class="main">
     <BaseHeader class="header"/>
     <div class="content">
-      <PatientList :patients="patients" class="list"/>
+      <PatientList :patients="patients" class="list"
+      @add="patients.splice($event, 0, {})"
+      @edit="editPatient"
+      @delete="deletePatient"/>
       <GmapMap class="map"
         :center="{lat: 0, lng: 0}"
         :zoom="3"
@@ -18,7 +21,6 @@
           </GmapInfoWindow>
         </GmapMarker>
       </GmapMap>
-      <i class="fas fa-plus-circle clickable" v-tooltip="'Add patient'"/>
     </div>
   </div>
 </template>
@@ -36,7 +38,8 @@ export default {
   },
   computed: {
     markers() {
-      return this.$data.patients.map(patient => ({
+      return this.$data.patients.filter(p => p.forecast)
+      .map(patient => ({
         id: patient.id,
         position: {
           lat: patient.forecast.geometry.coordinates[1],
@@ -51,6 +54,12 @@ export default {
     }
   },
   methods: {
+    editPatient(index, patient) {
+      this.$data.patients.splice(index, 1, patient);
+    },
+    deletePatient(index) {
+      this.$data.patients.splice(index, 1);
+    }
   },
   async mounted() {
     const patients = await apis.Tactio.getPatients();
@@ -58,6 +67,7 @@ export default {
       patient.forecast = await apis.Air.getForecast(patient.postalCode);
       patient.address = patient.streerAdress; //spelling mistake in api
       delete patient.streerAdress;
+      patient.editing = false;
       return patient;
     });
     this.$data.patients = await Promise.all(promises);
@@ -90,12 +100,5 @@ export default {
 }
 .list {
   grid-area: list;
-}
-.fa-plus-circle {
-  position: fixed;
-  right: 324px;
-  bottom: 24px;
-  z-index: 2;
-  font-size: 2em;
 }
 </style>

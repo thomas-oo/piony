@@ -12,11 +12,17 @@ const editPatient = function (patient) {
 
 const addPatient = function (patient) {
     const url = new URL(`${urlString}/patients`);
-    return fetch(url, {method: 'POST', body: JSON.stringify(patient)}).then(resp => resp.json());
+    return fetch(url, {method: 'POST', body: JSON.stringify(patient)}).then(resp => resp.ok ? Promise.resolve() : Promise.reject());
+}
+
+const deletePatient = function(patient) {
+    const url = new URL(`${urlString}/patients/${patient.id}`);
+    return fetch(url, {method: 'DELETE'}).then(resp => resp.ok ? Promise.resolve() : Promise.reject());
 }
 
 export default {
     getPatients,
     editPatient,
-    addPatient
+    addPatient,
+    deletePatient
 }

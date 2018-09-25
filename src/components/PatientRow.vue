@@ -1,10 +1,10 @@
 <template>
-  <div class="row">
+  <div>
     <BaseEditableField :editing="editing" :value="patient.firstName"
       @input="e => edit('firstName', e)"/>
     <BaseEditableField :editing="editing" :value="patient.lastName"
       @input="e => edit('lastName', e)"/>
-    <BaseEditableField :editing="editing" :value="patient.conditions.name"/>
+    <BaseEditableField :editing="editing" :value="patient.conditions ? patient.conditions.name : undefined"/>
     <BaseEditableField :editing="editing" :value="patient.address"
       @input="e => edit('address', e)"/>
     <BaseEditableField :editing="editing" :value="patient.city"
@@ -15,13 +15,17 @@
       @input="e => edit('postalCode', e)"/>
     <BaseEditableField :editing="editing" :value="patient.status"
       @input="e => edit('status', e)"/>
-    <div v-if="!editing" class="actions">
-      <i class="fas fa-edit fa-fw clickable" v-tooltip="'Edit'" @click="editing = true"/>
-      <i class="fas fa-trash fa-fw clickable" v-tooltip="'Delete'"/>
+    <div v-if="editing" class="actions">
+      <i class="fas fa-check fa-fw clickable" v-tooltip="'Submit'" @click="submit"/>
+      <i class="fas fa-ban fa-fw clickable" v-tooltip="'Cancel'" @click="cancel"/>
+    </div>
+    <div v-else-if="deleting" class="actions">
+      <i class="fas fa-check fa-fw clickable" v-tooltip="'Submit'" @click="doDelete"/>
+      <i class="fas fa-ban fa-fw clickable" v-tooltip="'Cancel'" @click="cancelDelete"/>
     </div>
     <div v-else class="actions">
-      <i class="fas fa-check fa-fw clickable" v-tooltip="'Submit'" @click="submit"/>
-      <i class="fas fa-ban fa-fw clickable" v-tooltip="'Cancel'" @click="cancelEdit"/>
+      <i class="fas fa-edit fa-fw clickable" v-tooltip="'Edit'" @click="$emit('edit')"/>
+      <i class="fas fa-trash fa-fw clickable" v-tooltip="'Delete'" @click="startDelete"/>
     </div>
   </div>
 </template>
@@ -32,12 +36,15 @@ export default {
   props: {
     patient: {
       required: true
+    },
+    editing: {
+      default: false,
     }
   },
   data() {
     return {
-      editing: false,
       newPatient: _.extend({}, this.patient),
+      deleting: false,
     }
   },
   computed: {
@@ -46,41 +53,38 @@ export default {
     edit(field, newValue) {
       this.$data.newPatient[field] = newValue;
     },
-    cancelEdit() {
-      this.$data.editing = false;
+    cancel() {
+      this.$emit('cancel');
       Object.entries(this.$data.newPatient).forEach(([key, value]) => {
-        this.$data.newPatient[key] = this.$props.patient[key];
+        this.$data.newPatient[key] = this.patient[key];
       });
     },
     async submit() {
       if (this.$data.newPatient.id) {
         await apis.Tactio.editPatient(this.$data.newPatient);
-        this.$data.editing = false;
+        this.$emit('submit', this.$data.newPatient);
       } else {
-        apis.Tactio.addPatient(this.$data.newPatient);
+        await apis.Tactio.addPatient(this.$data.newPatient);
+        this.$emit('submit', this.$data.newPatient);
       }
       return;
+    },
+    startDelete() {
+      this.$data.deleting = true;
+    },
+    async doDelete() {
+      await apis.Tactio.deletePatient(this.patient);
+      this.$emit('delete');
+      this.$data.deleting = false;
+    },
+    cancelDelete() {
+      this.$data.deleting = false;
     }
   }
 }
 </script>
 
 <style scoped>
-.row {
-  display: grid;
-  grid-template-columns: repeat(8, minmax(0,1fr)) min-content;
-  grid-template-rows: min-content;
-}
-.row>*:first-child {
-  border-left: 1px solid black;
-}
-.row>*:last-child {
-  border: unset;
-}
-.row>* {
-  border-right: 1px solid black;
-  border-bottom: 1px solid black;
-}
 .actions {
   place-self: center;
 }
