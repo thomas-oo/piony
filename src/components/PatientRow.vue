@@ -54,10 +54,14 @@ export default {
       this.$data.newPatient[field] = newValue;
     },
     cancel() {
-      this.$emit('cancel');
-      Object.entries(this.$data.newPatient).forEach(([key, value]) => {
-        this.$data.newPatient[key] = this.patient[key];
-      });
+      if (this.$data.editing) {
+        this.$emit('cancel');
+        Object.entries(this.$data.newPatient).forEach(([key, value]) => {
+          this.$data.newPatient[key] = this.patient[key];
+        });
+      } else {
+        this.$emit('delete');
+      }
     },
     async submit() {
       if (this.$data.newPatient.id) {

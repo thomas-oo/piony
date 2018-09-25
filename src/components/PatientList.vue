@@ -57,24 +57,24 @@ export default {
 .row {
   display: contents;
   /deep/ div:first-child {
-    border-left: 1px solid black;
+    border-left: 1px solid gray;
   }
   /deep/ div:last-child {
     border: unset;
   }
   /deep/ div {
-    border-right: 1px solid black;
-    border-bottom: 1px solid black;
+    border-right: 1px solid gray;
+    border-bottom: 1px solid gray;
   }
 }
 
 .column:first-child {
-  border-left: 1px solid black;
+  border-left: 1px solid gray;
 }
 .column {
-  border-right: 1px solid black;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
+  border-right: 1px solid gray;
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
 }
 .fa-plus-circle {
   position: fixed;

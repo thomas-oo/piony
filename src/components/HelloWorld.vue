@@ -15,6 +15,7 @@
         <GmapMarker v-for="m in markers" :key="m.id" 
           :position="m.position" 
           :draggable="m.draggable"
+          :options="{icon: m.icon, title: m.score}"
           @click="m.opened=!m.opened">
           <GmapInfoWindow :opened="m.opened">
             {{m.title}}
@@ -28,6 +29,9 @@
 <script>
 import apis from '@/apis';
 import PatientList from './PatientList';
+const greenMarker = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+const yellowMarker = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+const redMarker = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
 export default {
   name: 'HelloWorld',
   components: {PatientList},
@@ -39,18 +43,32 @@ export default {
   computed: {
     markers() {
       return this.$data.patients.filter(p => p.forecast)
-      .map(patient => ({
-        id: patient.id,
-        position: {
-          lat: patient.forecast.geometry.coordinates[1],
-          lng: patient.forecast.geometry.coordinates[0]
-        },
-        opacity: 0.5,
-        draggable: false,
-        enabled: true,
-        opened: true,
-        title: `${patient.firstName} ${patient.lastName}`
-      }));
+      .map(patient => {
+        const score = ''+_.round(patient.forecast.properties.value, 2);
+        const code = patient.forecast.properties.code;
+        let icon;
+        if (code === 'low') {
+          icon = greenMarker;
+        } else if (code === 'medium') {
+          icon = yellowMarker;
+        } else {
+          icon = redMarker;
+        }
+        return {
+          id: patient.id,
+          position: {
+            lat: patient.forecast.geometry.coordinates[1],
+            lng: patient.forecast.geometry.coordinates[0]
+          },
+          opacity: 0.5,
+          draggable: false,
+          enabled: true,
+          opened: true,
+          title: `${patient.firstName} ${patient.lastName}`,
+          score,
+          icon
+        }
+      });
     }
   },
   methods: {
