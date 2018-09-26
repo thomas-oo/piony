@@ -2,7 +2,7 @@
   <div class="main">
     <BaseHeader class="header"/>
     <div class="content">
-      <PatientList :patients="patients" class="list"
+      <PatientList :patients="patients" class="patients"
       @add="patients.splice($event, 0, {})"
       @edit="editPatient"
       @delete="deletePatient"/>
@@ -29,9 +29,7 @@
 <script>
 import apis from '@/apis';
 import PatientList from './PatientList';
-const greenMarker = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
-const yellowMarker = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
-const redMarker = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+import utils from '@/utils';
 export default {
   name: 'PIoNY',
   components: {PatientList},
@@ -46,14 +44,7 @@ export default {
       .map(patient => {
         const score = ''+_.round(patient.forecast.properties.value, 2);
         const code = patient.forecast.properties.code;
-        let icon;
-        if (code === 'low') {
-          icon = greenMarker;
-        } else if (code === 'medium') {
-          icon = yellowMarker;
-        } else {
-          icon = redMarker;
-        }
+        const icon = `http://maps.google.com/mapfiles/ms/icons/${utils.codeColor(code)}-dot.png`
         return {
           id: patient.id,
           position: {
@@ -107,7 +98,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr min-content;
   grid-template-areas:
-    "list map";
+    "patients map";
 }
 .header {
   grid-area: header;
@@ -116,7 +107,8 @@ export default {
 .map {
   grid-area: map;
 }
-.list {
-  grid-area: list;
+.patients {
+  grid-area: patients;
+  grid-auto-rows: min-content;
 }
 </style>

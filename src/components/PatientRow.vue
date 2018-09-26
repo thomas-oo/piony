@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="color">
     <BaseEditableField :editing="editing" :value="patient.firstName"
       @input="e => edit('firstName', e)"/>
     <BaseEditableField :editing="editing" :value="patient.lastName"
@@ -35,6 +35,7 @@
 
 <script>
 import apis from '@/apis';
+import utils from '@/utils';
 export default {
   props: {
     patient: {
@@ -59,6 +60,9 @@ export default {
         return [];
       }
       return this.conditions.map(cond => cond.name);
+    },
+    color() {
+      return this.patient.forecast ? utils.codeColor(this.patient.forecast.properties.code) : null;
     }
   },
   methods: {
@@ -71,12 +75,12 @@ export default {
       }
     },
     cancel() {
-      if (this.$data.editing) {
+      if (this.patient.id) { //cancel edit
         this.$emit('cancel');
         Object.entries(this.$data.newPatient).forEach(([key, value]) => {
           this.$data.newPatient[key] = this.patient[key];
         });
-      } else {
+      } else { //no id: cancel create
         this.$emit('delete');
       }
     },
@@ -105,8 +109,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .actions {
   place-self: center;
+}
+.red {
+  /deep/ div:not(:last-child) {
+    background-color: #ff6957;
+  }
+}
+.yellow {
+  /deep/ div:not(:last-child) {
+    background-color: #fdf54f;
+  }
+}
+.green {
+  /deep/ div:not(:last-child) {
+    background-color: #00e437;
+  }
 }
 </style>
